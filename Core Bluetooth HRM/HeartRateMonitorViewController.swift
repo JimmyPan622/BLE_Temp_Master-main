@@ -1,21 +1,3 @@
-//
-//  HeartRateMonitorViewController.swift
-//  Core Bluetooth HRM
-//
-//  Created by Andrew L. Jaffee on 4/6/18.
-//
-/*
- 
- Copyright (c) 2018 Andrew L. Jaffee, microIT Infrastructure, LLC, and iosbrain.com.
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
-*/
-
 import UIKit
 
 // STEP 0.00: MUST include the CoreBluetooth framework
@@ -55,9 +37,10 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     // MARK: - UIViewController delegate
     
     override func viewDidLoad() {
+        print("test print 1")
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        print("test print 2")
         // initially, we're scanning and not connected
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
@@ -66,12 +49,14 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         beatsPerMinuteLabel.text = "---"
         // just in case Bluetooth is turned off
         bluetoothOffLabel.alpha = 0.0
-        
+        print("test print 3")
         // STEP 1: create a concurrent background queue for the central
-        let centralQueue: DispatchQueue = DispatchQueue(label: "com.iosbrain.centralQueueName", attributes: .concurrent)
+        /*let centralQueue: DispatchQueue = DispatchQueue(label: "com.iosbrain.centralQueueName", attributes: .concurrent)
+        print(centralQueue)*/
         // STEP 2: create a central to scan for, connect to,
         // manage, and collect data from peripherals
-        centralManager = CBCentralManager(delegate: self, queue: centralQueue)
+        print("test print 4")
+        centralManager = CBCentralManager(delegate: self, queue: nil)
         
         // read heart rate data from HKHealthStore
         // healthKitInterface.readHeartRateData()
@@ -91,7 +76,7 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     // the device's Bluetooth state; we can ONLY
     // scan for peripherals if Bluetooth is .poweredOn
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        
+        print("test print 5")
         switch central.state {
         
         case .unknown:
@@ -118,7 +103,7 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
             }
             
             // STEP 3.2: scan for peripherals that we're interested in
-            centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID])
+            centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
             
         @unknown default:
             print("Error")
@@ -129,8 +114,10 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     // STEP 4.1: discover what peripheral devices OF INTEREST
     // are available for this app to connect to
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
+        peripheral.delegate = self
         print(peripheral.name!)
+        print("device ID:", BLE_Temp_Measurement_Characteristic_CBUUID)
+        print("test print 6")
         decodePeripheralState(peripheralState: peripheral.state)
         // STEP 4.2: MUST store a reference to the peripheral in
         // class instance variable
@@ -145,17 +132,17 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         // STEP 5: stop scanning to preserve battery life;
         // re-scan if disconnected
         centralManager?.stopScan()
-        
+        print("stop scan")
         // STEP 6: connect to the discovered peripheral of interest
         centralManager?.connect(peripheralMonitor!)
-        
+        print("connect: \(String(describing: peripheralMonitor))")
     } // END func centralManager(... didDiscover peripheral
     
     // STEP 7: "Invoked when a connection is successfully created with a peripheral."
     // we can only move forwards when we know the connection
     // to the peripheral succeeded
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        
+        print("test print 7")
         DispatchQueue.main.async { () -> Void in
             
             self.brandNameTextField.text = peripheral.name!
@@ -173,8 +160,8 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     // STEP 15: when a peripheral disconnects, take
     // use-case-appropriate action
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        
-        // print("Disconnected!")
+        print("test print 8")
+        print("Disconnected!")
         
         DispatchQueue.main.async { () -> Void in
             
@@ -195,30 +182,46 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     // MARK: - CBPeripheralDelegate methods
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        print("test print 9")
+        if((error != nil)){
+            print("Error: \(error!.localizedDescription)")
+            return
+        }
         
+        print(peripheral)
+        print("Discover Services: \(peripheral.services!)")
         for service in peripheral.services! {
-            
+            print("test print 9.1")
             if service.uuid == BLE_Temp_Service_CBUUID {
-                
+                print("test print 9.2")
                 print("Service: \(service)")
                 
                 // STEP 9: look for characteristics of interest
                 // within services of interest
                 peripheral.discoverCharacteristics(nil, for: service)
-                
             }
-            
+            print("test print 9.3")
         }
-        
+        print("test print 9.4")
     } // END func peripheral(... didDiscoverServices
     
     // STEP 10: confirm we've discovered characteristics
     // of interest within services of interest
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        
+        print("test print 10")
+        if((error != nil)){
+            print("Error: \(error!.localizedDescription)")
+            return
+        }
+        guard let characteristicss = service.characteristics else{
+            print("Error: No characteristics")
+            return
+        }
+        print("characteristics: \(characteristicss)")
         for characteristic in service.characteristics! {
+            print("test print 10.1")
             print(characteristic)
-
+            print("char ID:", characteristic.uuid)
             if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
 
                 // STEP 11: subscribe to regular notifications
@@ -230,11 +233,11 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
                 // Notify    Mandatory
                 //
                 peripheral.setNotifyValue(true, for: characteristic)
-                
+                print("test print 10.2")
             }
-            
+            print("test print 10.3")
         } // END for
-        
+        print("test print 10.4")
     } // END func peripheral(... didDiscoverCharacteristicsFor service
     
     // STEP 12: we're notified whenever a characteristic
@@ -242,14 +245,15 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     // decipher the characteristic value(s) that we've
     // subscribed to
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
+        print("test print 11")
+        print(characteristic.uuid)
         if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
             
             // STEP 13: we generally have to decode BLE
             // data into human readable format
             //define heartRat changed to tempValue
             let tempValue = deriveBeatsPerMinute(using: characteristic)
-            
+            print("test print 11.1")
             DispatchQueue.main.async { () -> Void in
                 
                 UIView.animate(withDuration: 1.0, animations: {
@@ -259,17 +263,17 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
                 }, completion: { (true) in
                     self.beatsPerMinuteLabel.alpha = 0.0
                 })
-                
+                print("test print 11.2")
             } // END DispatchQueue.main.async...
-
+            print("test print 11.3")
         } // END if characteristic.uuid ==...
-        
+        print("test print 11.4")
     } // END func peripheral(... didUpdateValueFor characteristic
     
     // MARK: - Utilities
     
     func deriveBeatsPerMinute(using heartRateMeasurementCharacteristic: CBCharacteristic) -> Int {
-        
+        print("test print 12")
         let heartRateValue = heartRateMeasurementCharacteristic.value!
         // convert to an array of unsigned 8-bit integers
         let buffer = [UInt8](heartRateValue)
@@ -295,33 +299,8 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         
     } // END func deriveBeatsPerMinute
     
-    func readSensorLocation(using sensorLocationCharacteristic: CBCharacteristic) -> String {
-        
-        let sensorLocationValue = sensorLocationCharacteristic.value!
-        // convert to an array of unsigned 8-bit integers
-        let buffer = [UInt8](sensorLocationValue)
-        var sensorLocation = ""
-        
-        // look at just 8 bits
-        if buffer[0] == 1
-        {
-            sensorLocation = "Chest"
-        }
-        else if buffer[0] == 2
-        {
-            sensorLocation = "Wrist"
-        }
-        else
-        {
-            sensorLocation = "N/A"
-        }
-        
-        return sensorLocation
-        
-    } // END func readSensorLocation
-    
     func decodePeripheralState(peripheralState: CBPeripheralState) {
-        
+        print("test print 13")
         switch peripheralState {
             case .disconnected:
                 print("Peripheral state: disconnected")

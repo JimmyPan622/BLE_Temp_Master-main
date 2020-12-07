@@ -1,6 +1,6 @@
 import UIKit
 import CoreBluetooth
-
+//git
 let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 

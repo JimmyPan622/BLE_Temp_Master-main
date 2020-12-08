@@ -1,6 +1,6 @@
 import UIKit
 import CoreBluetooth
-//git
+
 let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
@@ -20,47 +20,56 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         connectionStatusView.backgroundColor = UIColor.red
-        brandNameTextField.text = "----"
-        beatsPerMinuteLabel.text = "---"
+        cleanText()
         bluetoothOffLabel.alpha = 0.0
-        centralManager = CBCentralManager(delegate: self, queue: nil)
+        centralManager = CBCentralManager.init(delegate: self, queue: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
+    //init all text
+    func cleanText(){
+        brandNameTextField.text = "----"
+        beatsPerMinuteLabel.text = "----"
+    }
+    //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
-        
-        case .unknown:
-            print("Bluetooth status is UNKNOWN")
-            bluetoothOffLabel.alpha = 1.0
-        case .resetting:
-            print("Bluetooth status is RESETTING")
-            bluetoothOffLabel.alpha = 1.0
-        case .unsupported:
-            print("Bluetooth status is UNSUPPORTED")
-            bluetoothOffLabel.alpha = 1.0
-        case .unauthorized:
-            print("Bluetooth status is UNAUTHORIZED")
-            bluetoothOffLabel.alpha = 1.0
-        case .poweredOff:
-            print("Bluetooth status is POWERED OFF")
-            bluetoothOffLabel.alpha = 1.0
-            connectionStatusView.backgroundColor = UIColor.red
-        case .poweredOn:
-            print("Bluetooth status is POWERED ON")
-            
-            DispatchQueue.main.async { () -> Void in
-                self.bluetoothOffLabel.alpha = 0.0
-                self.connectingActivityIndicator.startAnimating()
-            }
+            case .unknown:
+                print("Bluetooth status is UNKNOWN")
+                bluetoothOffLabel.alpha = 1.0
+                cleanText()
+            case .resetting:
+                print("Bluetooth status is RESETTING")
+                bluetoothOffLabel.alpha = 1.0
+                cleanText()
+            case .unsupported:
+                print("Bluetooth status is UNSUPPORTED")
+                bluetoothOffLabel.alpha = 1.0
+                cleanText()
+            case .unauthorized:
+                print("Bluetooth status is UNAUTHORIZED")
+                bluetoothOffLabel.alpha = 1.0
+                cleanText()
+            case .poweredOff:
+                print("Bluetooth status is POWERED OFF")
+                bluetoothOffLabel.alpha = 1.0
+                cleanText()
+                connectionStatusView.backgroundColor = UIColor.red
+            case .poweredOn:
+                print("Bluetooth status is POWERED ON")
+                connectionStatusView.backgroundColor = UIColor.green
+                DispatchQueue.main.async { () -> Void in
+                    self.bluetoothOffLabel.alpha = 0.0
+                    self.connectingActivityIndicator.startAnimating()
+                }
             centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
-        @unknown default:
-            print("Error")
+            @unknown default:
+                print("Error")
         }
     }
+    //Get a compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         peripheral.delegate = self
         print(peripheral.name!)
@@ -68,17 +77,20 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         decodePeripheralState(peripheralState: peripheral.state)
         peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
-        centralManager?.stopScan()
-        print("stop scan")
-        centralManager?.connect(peripheralMonitor!)
-        print("connect: \(String(describing: peripheralMonitor))")
+        
+        if(peripheral.name == "AMICCOM_Demo"){
+            centralManager?.connect(peripheralMonitor!)
+            print("connect: \(String(describing: peripheralMonitor))")
+            centralManager?.stopScan()
+            print("stop scan")
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
             self.connectionStatusView.backgroundColor = UIColor.green
-            self.beatsPerMinuteLabel.text = "---"
+            self.beatsPerMinuteLabel.text = "----"
             self.connectingActivityIndicator.stopAnimating()
         }
         peripheralMonitor?.discoverServices([BLE_Temp_Service_CBUUID])
@@ -90,7 +102,7 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = "----"
             self.connectionStatusView.backgroundColor = UIColor.red
-            self.beatsPerMinuteLabel.text = "---"
+            self.beatsPerMinuteLabel.text = "----"
             self.connectingActivityIndicator.startAnimating()
         }
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID])
@@ -153,9 +165,8 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
     
     func deriveBeatsPerMinute(using TempCharacteristic: CBCharacteristic) ->  Float{
         let TempValue = TempCharacteristic.value!
-        print("TempValue.type: \(type(of: TempValue))")
-        print("TempValue.value: \(TempValue)")
-        print("TempCharacteristic.value: \(TempCharacteristic.value!)")
+        /*print("TempValue.type: \(type(of: TempValue))")
+        print("TempValue.value: \(TempValue)")*/
         let buffer = [UInt8](TempValue)
         print("buffer: \(buffer)")
         /*for byte in buffer{
@@ -164,23 +175,23 @@ class HeartRateMonitorViewController: UIViewController, CBCentralManagerDelegate
         print("test: \(String(format: "%2X", 20))")*/
 
         if ((buffer[0] & 0x01) == 0) {
-            var num = Float(Int(buffer[2]) << 8)
-            num += Float(buffer[1])
-            print("Celsius")
-            return (num / 100)
+            var temp = Float(Int(buffer[2]) << 8)
+            temp += Float(buffer[1])
+            print("Celsius:")
+            return (temp / 100)
         } else {
+            var temp = Float(Int(buffer[2]) << 8)
+            temp += Float(buffer[1])
             print("Fahrenheit")
-            return -1
+            return (temp / 100)
         }
     }
     
     func decodePeripheralState(peripheralState: CBPeripheralState) {
         switch peripheralState {
             case .disconnected:
-                connectionStatusView.backgroundColor = UIColor.red
                 print("Peripheral state: disconnected")
             case .connected:
-                connectionStatusView.backgroundColor = UIColor.green
                 print("Peripheral state: connected")
             case .connecting:
                 print("Peripheral state: connecting")

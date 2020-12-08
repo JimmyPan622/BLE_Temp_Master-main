@@ -9,18 +9,17 @@
 /* Begin PBXBuildFile section */
 		026A0DB420817B1F00824BE8 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 026A0DB320817B1F00824BE8 /* HealthKit.framework */; };
 		02D4A7D120780BAE00708F74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D4A7D020780BAE00708F74 /* AppDelegate.swift */; };
-		02D4A7D320780BAE00708F74 /* HeartRateMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D4A7D220780BAE00708F74 /* HeartRateMonitorViewController.swift */; };
+		02D4A7D320780BAE00708F74 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D4A7D220780BAE00708F74 /* ViewController.swift */; };
 		02D4A7D620780BAE00708F74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02D4A7D420780BAE00708F74 /* Main.storyboard */; };
 		02D4A7D820780BAE00708F74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02D4A7D720780BAE00708F74 /* Assets.xcassets */; };
 		02D4A7DB20780BAE00708F74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02D4A7D920780BAE00708F74 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		026A0DB120817B1F00824BE8 /* Core Bluetooth HRM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Core Bluetooth HRM.entitlements"; sourceTree = "<group>"; };
 		026A0DB320817B1F00824BE8 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		02D4A7CD20780BAE00708F74 /* BLE_Temp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BLE_Temp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02D4A7D020780BAE00708F74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		02D4A7D220780BAE00708F74 /* HeartRateMonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateMonitorViewController.swift; sourceTree = "<group>"; };
+		02D4A7D220780BAE00708F74 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		02D4A7D520780BAE00708F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		02D4A7D720780BAE00708F74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02D4A7DA20780BAE00708F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -50,7 +49,7 @@
 		02D4A7C420780BAE00708F74 = {
 			isa = PBXGroup;
 			children = (
-				02D4A7CF20780BAE00708F74 /* Core Bluetooth HRM */,
+				02D4A7CF20780BAE00708F74 /* Core Bluetooth TEMP */,
 				02D4A7CE20780BAE00708F74 /* Products */,
 				026A0DB220817B1F00824BE8 /* Frameworks */,
 			);
@@ -64,18 +63,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		02D4A7CF20780BAE00708F74 /* Core Bluetooth HRM */ = {
+		02D4A7CF20780BAE00708F74 /* Core Bluetooth TEMP */ = {
 			isa = PBXGroup;
 			children = (
-				026A0DB120817B1F00824BE8 /* Core Bluetooth HRM.entitlements */,
 				02D4A7D020780BAE00708F74 /* AppDelegate.swift */,
-				02D4A7D220780BAE00708F74 /* HeartRateMonitorViewController.swift */,
+				02D4A7D220780BAE00708F74 /* ViewController.swift */,
 				02D4A7D420780BAE00708F74 /* Main.storyboard */,
 				02D4A7D720780BAE00708F74 /* Assets.xcassets */,
 				02D4A7D920780BAE00708F74 /* LaunchScreen.storyboard */,
 				02D4A7DC20780BAE00708F74 /* Info.plist */,
 			);
-			path = "Core Bluetooth HRM";
+			path = "Core Bluetooth TEMP";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,7 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02D4A7D320780BAE00708F74 /* HeartRateMonitorViewController.swift in Sources */,
+				02D4A7D320780BAE00708F74 /* ViewController.swift in Sources */,
 				02D4A7D120780BAE00708F74 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,10 +298,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Core Bluetooth HRM/Core Bluetooth HRM.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XW65DAM26;
-				INFOPLIST_FILE = "Core Bluetooth HRM/Info.plist";
+				INFOPLIST_FILE = "Core Bluetooth TEMP/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jimmy.BLE-Temp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -316,10 +314,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Core Bluetooth HRM/Core Bluetooth HRM.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XW65DAM26;
-				INFOPLIST_FILE = "Core Bluetooth HRM/Info.plist";
+				INFOPLIST_FILE = "Core Bluetooth TEMP/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jimmy.BLE-Temp";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -4,7 +4,7 @@ import CoreBluetooth
 let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
-class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
@@ -14,6 +14,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     @IBOutlet weak var brandNameTextField: UITextField!
     @IBOutlet weak var beatsPerMinuteLabel: UILabel!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
+    @IBOutlet weak var bluetoothList: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,16 +24,32 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         cleanText()
         bluetoothOffLabel.alpha = 0.0
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
+                self.view.addGestureRecognizer(tap)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    @IBAction func btn_ChooseBle_Click(_ sender: UIButton) {
+        /*if let controller = storyboard?.instantiateViewController(withIdentifier: "bleDevicePage") {
+            present(controller, animated: true, completion: nil)
+        }*/
+    }
+    
+    //close keyboard
+    @objc func dismissKeyBoard(){
+        self.view.endEditing(true)
+    }
+    
     //init all text
     func cleanText(){
         brandNameTextField.text = "----"
         beatsPerMinuteLabel.text = "----"
     }
+    
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
@@ -60,29 +77,31 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             case .poweredOn:
                 print("Bluetooth status is POWERED ON")
                 connectionStatusView.backgroundColor = UIColor.green
+                
                 DispatchQueue.main.async { () -> Void in
                     self.bluetoothOffLabel.alpha = 0.0
                     self.connectingActivityIndicator.startAnimating()
                 }
-            centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
+                scanBLEDevice()
             @unknown default:
                 print("Error")
         }
     }
+    
     //Get a compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         peripheral.delegate = self
         print(peripheral.name!)
         print("Characteristic ID:", BLE_Temp_Measurement_Characteristic_CBUUID)
+        //self.bluetoothList.reloadData()
         decodePeripheralState(peripheralState: peripheral.state)
+        
         peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
         
         if(peripheral.name == "AMICCOM_Demo"){
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
-            centralManager?.stopScan()
-            print("stop scan")
         }
     }
     
@@ -200,6 +219,25 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         @unknown default:
             print("Error")
         }
+    }
+    
+    func scanBLEDevice(){
+        centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+            self.stopScanBLEDevice()
+        }
+    }
+    
+    func stopScanBLEDevice(){
+        centralManager?.stopScan()
+        print("stop scan")
+    }
+    
+    func connect(peripheral: CBPeripheral){
+        print("Connect")
+        print(peripheral)
+        
     }
 }
 

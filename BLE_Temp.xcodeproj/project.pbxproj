@@ -14,6 +14,7 @@
 		02D4A7D820780BAE00708F74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02D4A7D720780BAE00708F74 /* Assets.xcassets */; };
 		02D4A7DB20780BAE00708F74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02D4A7D920780BAE00708F74 /* LaunchScreen.storyboard */; };
 		C95C090D257F5AF100AE0231 /* bleDeviceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95C090C257F5AF100AE0231 /* bleDeviceVC.swift */; };
+		C95C09232580BB9100AE0231 /* LaunchScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95C09222580BB9100AE0231 /* LaunchScreenVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		02D4A7DA20780BAE00708F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		02D4A7DC20780BAE00708F74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C95C090C257F5AF100AE0231 /* bleDeviceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bleDeviceVC.swift; sourceTree = "<group>"; };
+		C95C09222580BB9100AE0231 /* LaunchScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,8 +71,9 @@
 			isa = PBXGroup;
 			children = (
 				02D4A7D020780BAE00708F74 /* AppDelegate.swift */,
-				02D4A7D420780BAE00708F74 /* Main.storyboard */,
 				02D4A7D920780BAE00708F74 /* LaunchScreen.storyboard */,
+				02D4A7D420780BAE00708F74 /* Main.storyboard */,
+				C95C09222580BB9100AE0231 /* LaunchScreenVC.swift */,
 				02D4A7D220780BAE00708F74 /* HomeVC.swift */,
 				C95C090C257F5AF100AE0231 /* bleDeviceVC.swift */,
 				02D4A7D720780BAE00708F74 /* Assets.xcassets */,
@@ -160,6 +163,7 @@
 				02D4A7D320780BAE00708F74 /* HomeVC.swift in Sources */,
 				02D4A7D120780BAE00708F74 /* AppDelegate.swift in Sources */,
 				C95C090D257F5AF100AE0231 /* bleDeviceVC.swift in Sources */,
+				C95C09232580BB9100AE0231 /* LaunchScreenVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

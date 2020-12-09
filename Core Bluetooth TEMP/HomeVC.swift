@@ -10,19 +10,20 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     var peripheralMonitor: CBPeripheral?
     
     @IBOutlet weak var connectingActivityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var connectionStatusView: UIView!
     @IBOutlet weak var brandNameTextField: UITextField!
     @IBOutlet weak var beatsPerMinuteLabel: UILabel!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
-    @IBOutlet weak var bluetoothList: UITableView!
+    @IBOutlet weak var chooseDeviceBtn: UIButton!
+    @IBOutlet weak var VANATEKLogo: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
-        connectionStatusView.backgroundColor = UIColor.red
         cleanText()
         bluetoothOffLabel.alpha = 0.0
+        VANATEKLogo.alpha = 0.3
+        chooseDeviceBtn.alpha = 0.0
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
@@ -73,10 +74,8 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
                 print("Bluetooth status is POWERED OFF")
                 bluetoothOffLabel.alpha = 1.0
                 cleanText()
-                connectionStatusView.backgroundColor = UIColor.red
             case .poweredOn:
                 print("Bluetooth status is POWERED ON")
-                connectionStatusView.backgroundColor = UIColor.green
                 
                 DispatchQueue.main.async { () -> Void in
                     self.bluetoothOffLabel.alpha = 0.0
@@ -102,13 +101,17 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         if(peripheral.name == "AMICCOM_Demo"){
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
+            stopScanBLEDevice()
+        }
+        else{
+            centralManager?.cancelPeripheralConnection(peripheral)
+            scanBLEDevice()
         }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
-            self.connectionStatusView.backgroundColor = UIColor.green
             self.beatsPerMinuteLabel.text = "----"
             self.connectingActivityIndicator.stopAnimating()
         }
@@ -120,7 +123,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = "----"
-            self.connectionStatusView.backgroundColor = UIColor.red
             self.beatsPerMinuteLabel.text = "----"
             self.connectingActivityIndicator.startAnimating()
         }
@@ -174,7 +176,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             let tempValue = deriveBeatsPerMinute(using: characteristic)
             DispatchQueue.main.async { () -> Void in
                 UIView.animate(withDuration: 1.0, animations: {
-                    self.beatsPerMinuteLabel.text = String(tempValue)
+                    self.beatsPerMinuteLabel.text = String(format: "%2f",  tempValue)
                     print(tempValue)
                 }, completion: { (true) in
                 })
@@ -223,10 +225,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     func scanBLEDevice(){
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
-            self.stopScanBLEDevice()
-        }
     }
     
     func stopScanBLEDevice(){
@@ -237,7 +235,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     func connect(peripheral: CBPeripheral){
         print("Connect")
         print(peripheral)
-        
     }
 }
 

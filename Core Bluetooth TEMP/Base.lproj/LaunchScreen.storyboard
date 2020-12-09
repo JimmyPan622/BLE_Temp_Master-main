@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -8,25 +8,25 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Launch ScreenVC-->
         <scene sceneID="EHf-IW-A2E">
             <objects>
-                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                <viewController id="01J-lp-oVM" customClass="LaunchScreenVC" customModule="BLE_Temp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="crtrhshqqx (1)" translatesAutoresizingMaskIntoConstraints="NO" id="AQm-Bd-NyV">
-                                <rect key="frame" x="-69" y="0.0" width="552" height="896"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="公司名稱(小)" translatesAutoresizingMaskIntoConstraints="NO" id="1dx-dK-KqB">
+                                <rect key="frame" x="20" y="359" width="382" height="178"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="AQm-Bd-NyV" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="61p-9e-XAh"/>
-                            <constraint firstItem="AQm-Bd-NyV" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="EUZ-c5-1ZD"/>
-                            <constraint firstItem="AQm-Bd-NyV" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="MfA-zv-RHn"/>
-                            <constraint firstItem="AQm-Bd-NyV" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-89" id="bQu-iS-RLq"/>
+                            <constraint firstItem="1dx-dK-KqB" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="3fJ-no-FEw"/>
+                            <constraint firstItem="1dx-dK-KqB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="315" id="RSI-y4-DwJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1dx-dK-KqB" secondAttribute="trailing" constant="12" id="SBW-8i-PWr"/>
+                            <constraint firstItem="1dx-dK-KqB" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="dE8-t1-SIp"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -36,6 +36,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="crtrhshqqx (1)" width="640" height="1136"/>
+        <image name="公司名稱(小)" width="707" height="282"/>
     </resources>
 </document>

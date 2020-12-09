@@ -10,6 +10,7 @@ import UIKit
 
 class LaunchScreenVC: UIViewController {
 
+    @IBOutlet weak var VANATEKLogo: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
 

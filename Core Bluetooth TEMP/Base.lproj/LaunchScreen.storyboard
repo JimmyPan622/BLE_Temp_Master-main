@@ -16,17 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="公司名稱(小)" translatesAutoresizingMaskIntoConstraints="NO" id="1dx-dK-KqB">
-                                <rect key="frame" x="20" y="359" width="382" height="178"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="公司名稱(小)" translatesAutoresizingMaskIntoConstraints="NO" id="V4W-cA-9XA">
+                                <rect key="frame" x="32" y="378" width="350" height="140"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="140" id="Ejx-RM-sHk"/>
+                                    <constraint firstAttribute="width" constant="350" id="ild-jq-PjD"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="1dx-dK-KqB" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="3fJ-no-FEw"/>
-                            <constraint firstItem="1dx-dK-KqB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="315" id="RSI-y4-DwJ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1dx-dK-KqB" secondAttribute="trailing" constant="12" id="SBW-8i-PWr"/>
-                            <constraint firstItem="1dx-dK-KqB" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="dE8-t1-SIp"/>
+                            <constraint firstItem="V4W-cA-9XA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="L2m-fU-J8e"/>
+                            <constraint firstItem="V4W-cA-9XA" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="nxj-oT-rpl"/>
                         </constraints>
                     </view>
                 </viewController>

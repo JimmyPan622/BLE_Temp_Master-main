@@ -98,7 +98,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
         
-        if(peripheral.name == "AMICCOM_Demo"){
+        if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
             stopScanBLEDevice()

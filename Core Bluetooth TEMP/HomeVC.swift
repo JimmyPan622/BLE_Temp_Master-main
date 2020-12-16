@@ -20,11 +20,12 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         super.viewDidLoad()
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
-        cleanText()
         bluetoothOffLabel.alpha = 0.0
-        VANATEKLogo.alpha = 0.3
         chooseDeviceBtn.alpha = 0.0
+        chooseDeviceBtn.isEnabled = false
+        VANATEKLogo.alpha = 0.3
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
+        cleanText()
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
                 self.view.addGestureRecognizer(tap)
@@ -35,21 +36,11 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     @IBAction func btn_ChooseBle_Click(_ sender: UIButton) {
-        /*if let controller = storyboard?.instantiateViewController(withIdentifier: "bleDevicePage") {
+        if let controller = storyboard?.instantiateViewController(withIdentifier: "bleDevicePage") {
             present(controller, animated: true, completion: nil)
-        }*/
+        }
     }
-    
-    //close keyboard
-    @objc func dismissKeyBoard(){
-        self.view.endEditing(true)
-    }
-    
-    //init all text
-    func cleanText(){
-        brandNameTextField.text = "----"
-        beatsPerMinuteLabel.text = "----"
-    }
+
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -76,7 +67,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
                 cleanText()
             case .poweredOn:
                 print("Bluetooth status is POWERED ON")
-                
+                //use main thread to update UI
                 DispatchQueue.main.async { () -> Void in
                     self.bluetoothOffLabel.alpha = 0.0
                     self.connectingActivityIndicator.startAnimating()
@@ -87,17 +78,19 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    //Get a compliant service and connect it
+    //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        //test line----------------------------------------
+
         peripheral.delegate = self
         print(peripheral.name!)
-        print("Characteristic ID:", BLE_Temp_Measurement_Characteristic_CBUUID)
+        print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
         //self.bluetoothList.reloadData()
         decodePeripheralState(peripheralState: peripheral.state)
         
         peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
-        
+
         if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
@@ -142,6 +135,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         print("Discover Services: \(services)")*/
         
         for service in peripheral.services! {
+            print("test print all service \(service)")
             if service.uuid == BLE_Temp_Service_CBUUID {
                 print("Serv Name: \(service)")
                 
@@ -235,6 +229,17 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     func connect(peripheral: CBPeripheral){
         print("Connect")
         print(peripheral)
+    }
+    
+    //close keyboard
+    @objc func dismissKeyBoard(){
+        self.view.endEditing(true)
+    }
+    
+    //init all text
+    func cleanText(){
+        brandNameTextField.text = "----"
+        beatsPerMinuteLabel.text = "----"
     }
 }
 

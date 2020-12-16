@@ -167,10 +167,10 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
-            let tempValue = deriveBeatsPerMinute(using: characteristic)
+            let tempValue = String(format: "%.2f", deriveBeatsPerMinute(using: characteristic))
             DispatchQueue.main.async { () -> Void in
                 UIView.animate(withDuration: 1.0, animations: {
-                    self.beatsPerMinuteLabel.text = String(format: "%.2f",  tempValue)
+                    self.beatsPerMinuteLabel.text = String(tempValue)
                     print(tempValue)
                 }, completion: { (true) in
                 })

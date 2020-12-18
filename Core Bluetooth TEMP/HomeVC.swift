@@ -5,7 +5,7 @@ let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
 class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
-    
+    var deviceList = [String]()
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
     
@@ -21,8 +21,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0
-        chooseDeviceBtn.alpha = 0.0
-        chooseDeviceBtn.isEnabled = false
+        //chooseDeviceBtn.alpha = 0.0
         VANATEKLogo.alpha = 0.3
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
         cleanText()
@@ -41,6 +40,9 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
 
+    @IBAction func BackMainBoard(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -80,18 +82,25 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        //test line----------------------------------------
-
-        peripheral.delegate = self
-        print(peripheral.name!)
-        print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
+        //if no device nearby, stop the scanner
+        if(peripheral.name == nil){
+            
+            return
+        }
+        else{
+            deviceList.append(String(peripheral.name!))
+        }
+        print(deviceList)
+        //print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
         //self.bluetoothList.reloadData()
-        decodePeripheralState(peripheralState: peripheral.state)
-        
-        peripheralMonitor = peripheral
+        //decodePeripheralState(peripheralState: peripheral.state)
+        //暫時不使用-----------------------------------------------------------
+        /*peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
-
+        print("Device List: \(String(describing: peripheralMonitor))")
         if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
+            //設為代表後才能抓取資料
+            peripheral.delegate = self
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
             stopScanBLEDevice()
@@ -99,7 +108,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         else{
             centralManager?.cancelPeripheralConnection(peripheral)
             scanBLEDevice()
-        }
+        }*/
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -139,7 +148,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             if service.uuid == BLE_Temp_Service_CBUUID {
                 print("Serv Name: \(service)")
                 
-                peripheral.discoverCharacteristics(nil, for: service)
+                //peripheral.discoverCharacteristics(nil, for: service)
             }
         }
     }
@@ -206,19 +215,19 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         switch peripheralState {
             case .disconnected:
                 print("Peripheral state: disconnected")
+            case .disconnecting:
+                print("Peripheral state: disconnecting")
             case .connected:
                 print("Peripheral state: connected")
             case .connecting:
                 print("Peripheral state: connecting")
-            case .disconnecting:
-                print("Peripheral state: disconnecting")
         @unknown default:
             print("Error")
         }
     }
     
     func scanBLEDevice(){
-        centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
+        centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
     
     func stopScanBLEDevice(){

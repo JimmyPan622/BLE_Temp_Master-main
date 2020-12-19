@@ -68,6 +68,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Choose device"/>
                                 <connections>
+                                    <action selector="SwitchDeviceList:" destination="BYZ-38-t0r" eventType="touchUpInside" id="67i-uB-5Gu"/>
                                     <segue destination="ks1-q8-WCX" kind="presentation" id="pi0-Gj-zIh"/>
                                 </connections>
                             </button>
@@ -117,7 +118,7 @@
         <!--Ble DeviceVC-->
         <scene sceneID="yWg-r1-QYM">
             <objects>
-                <viewController storyboardIdentifier="bleDeviceVC" id="ks1-q8-WCX" customClass="bleDeviceVC" customModule="BLE_Temp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bleDevice" id="ks1-q8-WCX" customClass="bleDeviceVC" customModule="BLE_Temp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zQ6-qE-PkN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

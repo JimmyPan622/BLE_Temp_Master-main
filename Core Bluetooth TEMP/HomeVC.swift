@@ -4,12 +4,13 @@ import CoreBluetooth
 let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
-protocol DismissBackDelegate {
-    func dissmissBack(sentData : Any)
+protocol FetchTextDelegate {
+    func fetchText(_ text: String)
 }
 
 class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
-    
+    var delegate: FetchTextDelegate?
+    var deviceScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "bleDevice") as! bleDeviceVC
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
     
@@ -40,13 +41,10 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     
     
-    var data = "123321"
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "presentSegue"{
-            if let presentVC = segue.destination as? bleDeviceVC{
-                presentVC.delegate = self
-            }
-        }
+    @IBAction func SwitchDeviceList(_ sender: Any) {
+        self.present(deviceScreen, animated: true, completion: nil)
+        self.delegate = deviceScreen
+        self.delegate?.fetchText("123321")
     }
     
     //Get bluetooth status
@@ -247,13 +245,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     func cleanText(){
         brandNameTextField.text = "----"
         beatsPerMinuteLabel.text = "----"
-    }
-}
-
-extension HomeVC : DismissBackDelegate{
-    func dissmissBack(sentData : Any){
-        data = sentData as! String
-        print(data)
     }
 }
 

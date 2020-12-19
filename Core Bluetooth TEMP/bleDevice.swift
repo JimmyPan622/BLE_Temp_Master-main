@@ -17,11 +17,9 @@ class bleDeviceVC: UIViewController {
     }
     
     var dataToBeSend = "999999"
-    var delegate : DismissBackDelegate?
     
     @IBAction func clickDismiss(_ sender: Any) {
-        delegate?.dissmissBack(sentData: dataToBeSend)
-        dismiss(animated: true)
+
     }
     /*
     // MARK: - Navigation
@@ -33,4 +31,9 @@ class bleDeviceVC: UIViewController {
     }
     */
 
+}
+extension bleDeviceVC: FetchTextDelegate{
+    func fetchText(_ text: String){
+        print(text)
+    }
 }

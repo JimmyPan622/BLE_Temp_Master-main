@@ -17,7 +17,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBOutlet weak var brandNameTextField: UITextField!
     @IBOutlet weak var beatsPerMinuteLabel: UILabel!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
-    @IBOutlet weak var chooseDeviceBtn: UIButton!
     @IBOutlet weak var VANATEKLogo: UIImageView!
     
     override func viewDidLoad() {

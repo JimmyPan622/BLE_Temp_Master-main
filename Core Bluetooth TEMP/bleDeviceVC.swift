@@ -16,10 +16,13 @@ class bleDeviceVC: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func btn_Back_Click(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
+    var dataToBeSend = "999999"
+    var delegate : DismissBackDelegate?
     
+    @IBAction func clickDismiss(_ sender: Any) {
+        delegate?.dissmissBack(sentData: dataToBeSend)
+        dismiss(animated: true)
+    }
     /*
     // MARK: - Navigation
 

@@ -13,6 +13,10 @@ let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
 class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
+    var centralManager: CBCentralManager?
+    var peripheralMonitor: CBPeripheral?
+    let myDevice: [String] = ["Chairman", "MacBook", "iPhone6s", "Monx", "Samsung S2"]
+    var deviceList: [String] = []
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -36,7 +40,17 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        peripheral.delegate = self
+        //if no device nearby, stop the scanner
+        if(peripheral.name == nil){
+            stopScanBLEDevice()
+            print("stop scan")
+            return
+        }
+        else{
+            deviceList.append(String(peripheral.name!))
+        }
+        print(deviceList)
+        /*peripheral.delegate = self
         print(peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
         //self.bluetoothList.reloadData()
@@ -53,7 +67,7 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
         else{
             centralManager?.cancelPeripheralConnection(peripheral)
             scanBLEDevice()
-        }
+        }*/
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -64,11 +78,6 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
         print("Disconnected!")
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID])
     }
-    
-    
-    var centralManager: CBCentralManager?
-    var peripheralMonitor: CBPeripheral?
-    let myDevice: [String] = ["Chairman", "MacBook", "iPhone6s", "Monx", "Samsung S2"]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return myDevice.count

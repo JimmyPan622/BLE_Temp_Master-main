@@ -1,9 +1,6 @@
 import UIKit
 import CoreBluetooth
 
-let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
-let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
-
 protocol FetchTextDelegate {
     func fetchText(_ text: String)
 }
@@ -25,8 +22,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0
-        //chooseDeviceBtn.alpha = 0.0
-        //chooseDeviceBtn.isEnabled = false
         VANATEKLogo.alpha = 0.3
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
         cleanText()
@@ -38,8 +33,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
     
     @IBAction func SwitchDeviceList(_ sender: Any) {
         self.present(deviceScreen, animated: true, completion: nil)
@@ -85,8 +78,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        //test line----------------------------------------
-
         peripheral.delegate = self
         print(peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)

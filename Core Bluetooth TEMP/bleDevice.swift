@@ -22,18 +22,18 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate 
         return cell
     }
     
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Your selected is: \(myDevice[indexPath.row])")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    var dataToBeSend = "999999"
     
     @IBAction func clickDismiss(_ sender: Any) {
         dismiss(animated: true, completion: nil)

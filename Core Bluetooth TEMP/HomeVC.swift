@@ -84,7 +84,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         //if no device nearby, stop the scanner
         if(peripheral.name == nil){
-            
             return
         }
         else{

@@ -8,7 +8,20 @@
 
 import UIKit
 
-class bleDeviceVC: UIViewController {
+class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    let myDevice: [String] = ["Chairman", "MacBook", "iPhone6s", "Monx", "Samsung S2"]
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return myDevice.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.textLabel?.text = myDevice[indexPath.row]
+        return cell
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,10 +29,14 @@ class bleDeviceVC: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
     var dataToBeSend = "999999"
     
     @IBAction func clickDismiss(_ sender: Any) {
-
+        dismiss(animated: true, completion: nil)
     }
     /*
     // MARK: - Navigation

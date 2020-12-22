@@ -16,12 +16,13 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("1:")
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0
         //chooseDeviceBtn.alpha = 0.0
         VANATEKLogo.alpha = 0.3
-        centralManager = CBCentralManager.init(delegate: self, queue: nil)
+        //centralManager = CBCentralManager.init(delegate: self, queue: nil)
         cleanText()
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
@@ -40,6 +41,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        print("2:")
         switch central.state {
         case .unknown:
             print("Bluetooth status is UNKNOWN")
@@ -75,7 +77,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("flag1")
+        print("4")
         peripheral.delegate = self
         print("M: "+peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
@@ -97,7 +99,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, ƒ peripheral: CBPeripheral) {
-        print("flag2")
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
             self.beatsPerMinuteLabel.text = "----"
@@ -118,7 +119,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print("flag3")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -141,7 +141,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("flag4")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -163,7 +162,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("flag5")
         if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
             let tempValue = String(format: "%.2f", deriveBeatsPerMinute(using: characteristic))
             DispatchQueue.main.async { () -> Void in
@@ -216,7 +214,9 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func scanBLEDevice(){
-        centralManager?.scanForPeripherals(withServices: nil, options: nil)
+        print("start")
+        centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
+        print("end")
     }
     
     func stopScanBLEDevice(){
@@ -250,7 +250,9 @@ extension Array where Element: Hashable {
 
 extension HomeVC: FetchTargetDelegate{
     func fetchText(_ text: String){
+        print("3:")
         print(text)
         connectTarget = text
+        scanBLEDevice()
     }
 }

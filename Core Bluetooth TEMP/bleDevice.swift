@@ -11,21 +11,22 @@ import CoreBluetooth
 let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
-class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
-        
+class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+    @IBOutlet weak var deviceTable: UITableView!
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
-    let myDevice: [String] = ["Chairman", "MacBook", "iPhone6s", "Monx", "Samsung S2"]
+
     var deviceList: [String] = []
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state{
-        case .poweredOff:
-            print("Bluetooth status is POWERED OFF")
         case .poweredOn:
             print("Bluetooth status is POWERED ON")
+            scanBLEDevice()
+        case .poweredOff:
+            print("Bluetooth status is POWERED OFF")
         case .unknown:
-            print("Bluetooth status is POWERED ON")
+            print("Bluetooth status is POWERED UNKNOW")
         case .resetting:
             print("Bluetooth status is RESETTING")
         case .unsupported:
@@ -44,9 +45,14 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
             return
         }
         else{
-            deviceList.append(String(peripheral.name!))
+            /*deviceList.append(String(peripheral.name!))
+            deviceList = deviceList.removingDuplicates()
+            deviceTable.reloadData()*/
+            addData(String(peripheral.name!))
+
         }
-        print(deviceList)
+        print("print! \(deviceList)")
+        
         /*peripheral.delegate = self
         print(peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
@@ -67,28 +73,24 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
         }*/
     }
     
+    func addData(_ data: String){
+        let index = 0
+        deviceList.insert(data, at: index)
+
+        let indexPath = IndexPath(row: index, section: 0)
+        deviceTable.insertRows(at: [indexPath], with: .top)
+        
+    }
+    
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheralMonitor?.discoverServices([BLE_Temp_Service_CBUUID])
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return myDevice.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        scanBLEDevice()
-        cell.textLabel?.text = myDevice[indexPath.row]
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Your selected is: \(myDevice[indexPath.row])")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("Into device Page")
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
+
         // Do any additional setup after loading the view.
     }
     
@@ -112,7 +114,7 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
     }
     
     func scanBLEDevice(){
-        centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
+        centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
     
     func stopScanBLEDevice(){
@@ -144,6 +146,24 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
     */
 
 }
+extension bleDeviceVC: UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return deviceList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.textLabel?.text = deviceList[indexPath.row]
+        print("f1")
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("f2")
+        print("Your selected is: \(deviceList[indexPath.row])")
+    }
+}
+
 extension bleDeviceVC: FetchTextDelegate{
     func fetchText(_ text: String){
         print(text)

@@ -158,6 +158,9 @@
                             <constraint firstItem="hW4-PX-k8z" firstAttribute="bottom" secondItem="MFK-4o-jX9" secondAttribute="bottom" id="rQb-Jd-G2c"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="deviceTable" destination="hW4-PX-k8z" id="96D-c2-7q6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ROH-jq-Hh9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

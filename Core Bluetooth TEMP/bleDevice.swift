@@ -4,9 +4,12 @@
 //
 //  Created by Jimmy Pan on 2020/12/8.
 //
-
 import UIKit
 import CoreBluetooth
+
+protocol FetchTargetDelegate {
+    func fetchText(_ text: String)
+}
 
 let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
@@ -15,7 +18,8 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
     @IBOutlet weak var deviceTable: UITableView!
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
-    
+    var delegate: FetchTargetDelegate?
+    var HomePage = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomePage") as! HomeVC
     var deviceList: [String] = []
     
     override func viewDidLoad() {
@@ -93,25 +97,6 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
         deviceTable.insertRows(at: [indexPath], with: .top)
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        peripheralMonitor?.discoverServices([BLE_Temp_Service_CBUUID])
-    }
-    
-    func decodePeripheralState(peripheralState: CBPeripheralState) {
-        switch peripheralState {
-            case .disconnected:
-                print("Peripheral state: disconnected")
-            case .connected:
-                print("Peripheral state: connected")
-            case .connecting:
-                print("Peripheral state: connecting")
-            case .disconnecting:
-                print("Peripheral state: disconnecting")
-        @unknown default:
-            print("Error")
-        }
-    }
-    
     func scanBLEDevice(){
         centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
@@ -151,11 +136,8 @@ extension bleDeviceVC: UITableViewDataSource, UITableViewDelegate{
         print("f2")
         let targetDevice = deviceList[indexPath.row]
         print("Your selected is: \(deviceList[indexPath.row])")
-    }
-}
-
-extension bleDeviceVC: FetchTextDelegate{
-    func fetchText(_ text: String){
-        print(text)
+        self.dismiss(animated: true, completion: nil)
+        self.delegate = HomePage
+        self.delegate?.fetchText(targetDevice)
     }
 }

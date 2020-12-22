@@ -1,14 +1,10 @@
 import UIKit
 import CoreBluetooth
 
-protocol FetchTextDelegate {
-    func fetchText(_ text: String)
-}
+var connectTarget: String = ""
 
 class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     var deviceList = [String]()
-    var delegate: FetchTextDelegate?
-    var ListPage = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "bleDevice") as! bleDeviceVC
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
     
@@ -37,49 +33,71 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     @IBAction func SwitchDeviceList(_ sender: Any) {
-        self.present(ListPage, animated: true, completion: nil)
+        /*self.present(ListPage, animated: true, completion: nil)
         self.delegate = ListPage
-        self.delegate?.fetchText("123321")
+        self.delegate?.fetchText("123321")*/
     }
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
-            case .unknown:
-                print("Bluetooth status is UNKNOWN")
-                bluetoothOffLabel.alpha = 1.0
-                cleanText()
-            case .resetting:
-                print("Bluetooth status is RESETTING")
-                bluetoothOffLabel.alpha = 1.0
-                cleanText()
-            case .unsupported:
-                print("Bluetooth status is UNSUPPORTED")
-                bluetoothOffLabel.alpha = 1.0
-                cleanText()
-            case .unauthorized:
-                print("Bluetooth status is UNAUTHORIZED")
-                bluetoothOffLabel.alpha = 1.0
-                cleanText()
-            case .poweredOff:
-                print("Bluetooth status is POWERED OFF")
-                bluetoothOffLabel.alpha = 1.0
-                cleanText()
-            case .poweredOn:
-                print("Bluetooth status is POWERED ON")
-                //use main thread to update UI
-                DispatchQueue.main.async { () -> Void in
-                    self.bluetoothOffLabel.alpha = 0.0
-                    self.connectingActivityIndicator.startAnimating()
-                }
-                print("flag3")
-                //scanBLEDevice()
-            @unknown default:
-                print("Error")
+        case .unknown:
+            print("Bluetooth status is UNKNOWN")
+            bluetoothOffLabel.alpha = 1.0
+            cleanText()
+        case .resetting:
+            print("Bluetooth status is RESETTING")
+            bluetoothOffLabel.alpha = 1.0
+            cleanText()
+        case .unsupported:
+            print("Bluetooth status is UNSUPPORTED")
+            bluetoothOffLabel.alpha = 1.0
+            cleanText()
+        case .unauthorized:
+            print("Bluetooth status is UNAUTHORIZED")
+            bluetoothOffLabel.alpha = 1.0
+            cleanText()
+        case .poweredOff:
+            print("Bluetooth status is POWERED OFF")
+            bluetoothOffLabel.alpha = 1.0
+            cleanText()
+        case .poweredOn:
+            print("Bluetooth status is POWERED ON")
+            //use main thread to update UI
+            DispatchQueue.main.async { () -> Void in
+                self.bluetoothOffLabel.alpha = 0.0
+                self.connectingActivityIndicator.startAnimating()
+            }
+        @unknown default:
+            print("Error")
         }
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    //Scan compliant service and connect it
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        print("flag1")
+        peripheral.delegate = self
+        print("M: "+peripheral.name!)
+        print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
+        //self.bluetoothList.reloadData()
+        decodePeripheralState(peripheralState: peripheral.state)
+        
+        peripheralMonitor = peripheral
+        peripheralMonitor?.delegate = self
+
+        if(peripheral.name == connectTarget){
+            centralManager?.connect(peripheralMonitor!)
+            print("connect: \(String(describing: peripheralMonitor))")
+            stopScanBLEDevice()
+        }
+        else{
+            centralManager?.cancelPeripheralConnection(peripheral)
+            scanBLEDevice()
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, ƒ peripheral: CBPeripheral) {
+        print("flag2")
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
             self.beatsPerMinuteLabel.text = "----"
@@ -100,6 +118,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        print("flag3")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -122,6 +141,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        print("flag4")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -143,6 +163,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("flag5")
         if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
             let tempValue = String(format: "%.2f", deriveBeatsPerMinute(using: characteristic))
             DispatchQueue.main.async { () -> Void in
@@ -194,6 +215,15 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
+    func scanBLEDevice(){
+        centralManager?.scanForPeripherals(withServices: nil, options: nil)
+    }
+    
+    func stopScanBLEDevice(){
+        centralManager?.stopScan()
+        print("stop scan")
+    }
+    
     //close keyboard
     @objc func dismissKeyBoard(){
         self.view.endEditing(true)
@@ -216,4 +246,11 @@ extension Array where Element: Hashable {
    mutating func removeDuplicates() {
       self = self.removingDuplicates()
    }
+}
+
+extension HomeVC: FetchTargetDelegate{
+    func fetchText(_ text: String){
+        print(text)
+        connectTarget = text
+    }
 }

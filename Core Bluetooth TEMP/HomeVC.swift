@@ -13,7 +13,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBOutlet weak var brandNameTextField: UITextField!
     @IBOutlet weak var beatsPerMinuteLabel: UILabel!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
-    @IBOutlet weak var chooseDeviceBtn: UIButton!
+
     @IBOutlet weak var VANATEKLogo: UIImageView!
     
     override func viewDidLoad() {
@@ -22,8 +22,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0
-        chooseDeviceBtn.alpha = 0.0
-        chooseDeviceBtn.isEnabled = false
         VANATEKLogo.alpha = 0.3
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
         cleanText()
@@ -114,8 +112,8 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("7")
         print("Disconnected!")
-        
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = "----"
             self.beatsPerMinuteLabel.text = "----"

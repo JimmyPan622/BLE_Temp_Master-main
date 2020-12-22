@@ -18,6 +18,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("1: ")
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0
@@ -44,6 +45,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        print("2")
         switch central.state {
             case .unknown:
                 print("Bluetooth status is UNKNOWN")
@@ -81,7 +83,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         //test line----------------------------------------
-
+        print("4")
         peripheral.delegate = self
         print(peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
@@ -123,6 +125,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        print("5:")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -145,6 +148,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        print("6")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -218,6 +222,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func scanBLEDevice(){
+        print("3")
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
     }
     

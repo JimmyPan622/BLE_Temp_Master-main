@@ -3,7 +3,6 @@
 //  BLE_Temp
 //
 //  Created by Jimmy Pan on 2020/12/8.
-//  Copyright © 2020 Andrew Jaffee. All rights reserved.
 //
 
 import UIKit
@@ -13,28 +12,28 @@ let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
 let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
 
 class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
+        
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
     let myDevice: [String] = ["Chairman", "MacBook", "iPhone6s", "Monx", "Samsung S2"]
     var deviceList: [String] = []
     
-    //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch central.state {
-            case .unknown:
-                print("Bluetooth status is UNKNOWN")
-            case .resetting:
-                print("Bluetooth status is RESETTING")
-            case .unsupported:
-                print("Bluetooth status is UNSUPPORTED")
-            case .unauthorized:
-                print("Bluetooth status is UNAUTHORIZED")
-            case .poweredOff:
-                print("Bluetooth status is POWERED OFF")
-            case .poweredOn:
-                print("Bluetooth status is POWERED ON")
-            @unknown default:
-                print("Error")
+        switch central.state{
+        case .poweredOff:
+            print("Bluetooth status is POWERED OFF")
+        case .poweredOn:
+            print("Bluetooth status is POWERED ON")
+        case .unknown:
+            print("Bluetooth status is POWERED ON")
+        case .resetting:
+            print("Bluetooth status is RESETTING")
+        case .unsupported:
+            print("Bluetooth status is UNSUPPORTED")
+        case .unauthorized:
+            print("Bluetooth status is UNAUTHORIZED")
+        @unknown default:
+            print("Error")
         }
     }
     
@@ -42,8 +41,6 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         //if no device nearby, stop the scanner
         if(peripheral.name == nil){
-            stopScanBLEDevice()
-            print("stop scan")
             return
         }
         else{
@@ -73,11 +70,6 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheralMonitor?.discoverServices([BLE_Temp_Service_CBUUID])
     }
-
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("Disconnected!")
-        centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID])
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return myDevice.count
@@ -85,6 +77,7 @@ class bleDeviceVC: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
+        scanBLEDevice()
         cell.textLabel?.text = myDevice[indexPath.row]
         return cell
     }

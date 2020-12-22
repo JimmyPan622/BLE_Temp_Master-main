@@ -3,7 +3,6 @@
 //  BLE_Temp
 //
 //  Created by Jimmy Pan on 2020/12/9.
-//  Copyright © 2020 Andrew Jaffee. All rights reserved.
 //
 
 import UIKit

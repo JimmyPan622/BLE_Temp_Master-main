@@ -6,6 +6,7 @@ protocol FetchTextDelegate {
 }
 
 class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+    var deviceList = [String]()
     var delegate: FetchTextDelegate?
     var deviceScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "bleDevice") as! bleDeviceVC
     var centralManager: CBCentralManager?
@@ -15,6 +16,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBOutlet weak var brandNameTextField: UITextField!
     @IBOutlet weak var beatsPerMinuteLabel: UILabel!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
+    @IBOutlet weak var chooseDeviceBtn: UIButton!
     @IBOutlet weak var VANATEKLogo: UIImageView!
     
     override func viewDidLoad() {
@@ -22,6 +24,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0
+        //chooseDeviceBtn.alpha = 0.0
         VANATEKLogo.alpha = 0.3
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
         cleanText()
@@ -35,10 +38,10 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     @IBAction func SwitchDeviceList(_ sender: Any) {
-        self.present(deviceScreen, animated: true, completion: nil)
-        self.delegate = deviceScreen
-        self.delegate?.fetchText("123321")
-    }
+            self.present(deviceScreen, animated: true, completion: nil)
+            self.delegate = deviceScreen
+            self.delegate?.fetchText("123321")
+        }
     
     //Get bluetooth status
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -78,16 +81,25 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        peripheral.delegate = self
-        print(peripheral.name!)
-        print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
+        //if no device nearby, stop the scanner
+        if(peripheral.name == nil){
+            return
+        }
+        else{
+            deviceList.append(String(peripheral.name!))
+        }
+        let DeviceList = deviceList.removingDuplicates()
+        print(DeviceList)
+        //print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
         //self.bluetoothList.reloadData()
-        decodePeripheralState(peripheralState: peripheral.state)
-        
-        peripheralMonitor = peripheral
+        //decodePeripheralState(peripheralState: peripheral.state)
+        //暫時不使用-----------------------------------------------------------
+        /*peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
-
+        print("Device List: \(String(describing: peripheralMonitor))")
         if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
+            //設為代表後才能抓取資料
+            peripheral.delegate = self
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
             stopScanBLEDevice()
@@ -95,7 +107,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         else{
             centralManager?.cancelPeripheralConnection(peripheral)
             scanBLEDevice()
-        }
+        }*/
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -135,7 +147,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             if service.uuid == BLE_Temp_Service_CBUUID {
                 print("Serv Name: \(service)")
                 
-                peripheral.discoverCharacteristics(nil, for: service)
+                //peripheral.discoverCharacteristics(nil, for: service)
             }
         }
     }
@@ -202,19 +214,19 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         switch peripheralState {
             case .disconnected:
                 print("Peripheral state: disconnected")
+            case .disconnecting:
+                print("Peripheral state: disconnecting")
             case .connected:
                 print("Peripheral state: connected")
             case .connecting:
                 print("Peripheral state: connecting")
-            case .disconnecting:
-                print("Peripheral state: disconnecting")
         @unknown default:
             print("Error")
         }
     }
     
     func scanBLEDevice(){
-        centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
+        centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
     
     func stopScanBLEDevice(){
@@ -239,3 +251,14 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 }
 
+extension Array where Element: Hashable {
+  func removingDuplicates() -> [Element] {
+      var addedDict = [Element: Bool]()
+      return filter {
+        addedDict.updateValue(true, forKey: $0) == nil
+      }
+   }
+   mutating func removeDuplicates() {
+      self = self.removingDuplicates()
+   }
+}

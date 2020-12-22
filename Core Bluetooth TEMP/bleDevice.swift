@@ -45,11 +45,9 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
             return
         }
         else{
-            /*deviceList.append(String(peripheral.name!))
+            deviceList.append(String(peripheral.name!))
             deviceList = deviceList.removingDuplicates()
-            deviceTable.reloadData()*/
-            addData(String(peripheral.name!))
-
+            deviceTable.reloadData()
         }
         print("print! \(deviceList)")
         

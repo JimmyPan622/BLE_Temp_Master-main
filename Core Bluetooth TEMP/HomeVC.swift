@@ -8,7 +8,7 @@ protocol FetchTextDelegate {
 class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     var deviceList = [String]()
     var delegate: FetchTextDelegate?
-    var deviceScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "bleDevice") as! bleDeviceVC
+    var ListPage = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "bleDevice") as! bleDeviceVC
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
     
@@ -37,8 +37,8 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     @IBAction func SwitchDeviceList(_ sender: Any) {
-        self.present(deviceScreen, animated: true, completion: nil)
-        self.delegate = deviceScreen
+        self.present(ListPage, animated: true, completion: nil)
+        self.delegate = ListPage
         self.delegate?.fetchText("123321")
     }
     

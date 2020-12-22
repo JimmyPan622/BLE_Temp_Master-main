@@ -15,8 +15,19 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
     @IBOutlet weak var deviceTable: UITableView!
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
-
+    
     var deviceList: [String] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("Into device Page")
+        centralManager = CBCentralManager.init(delegate: self, queue: nil)
+        // Do any additional setup after loading the view.
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state{
@@ -25,6 +36,7 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
             scanBLEDevice()
         case .poweredOff:
             print("Bluetooth status is POWERED OFF")
+            stopScanBLEDevice()
         case .unknown:
             print("Bluetooth status is POWERED UNKNOW")
         case .resetting:
@@ -70,30 +82,19 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
             scanBLEDevice()
         }*/
     }
-    
+    //insert data into list for animate
+    //How to call:
+    //addData(String(peripheral.name!))
     func addData(_ data: String){
         let index = 0
         deviceList.insert(data, at: index)
 
         let indexPath = IndexPath(row: index, section: 0)
         deviceTable.insertRows(at: [indexPath], with: .top)
-        
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheralMonitor?.discoverServices([BLE_Temp_Service_CBUUID])
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print("Into device Page")
-        centralManager = CBCentralManager.init(delegate: self, queue: nil)
-
-        // Do any additional setup after loading the view.
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     func decodePeripheralState(peripheralState: CBPeripheralState) {
@@ -120,16 +121,6 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
         print("stop scan")
     }
     
-    func connect(peripheral: CBPeripheral){
-        print("Connect")
-        print(peripheral)
-    }
-    
-    //close keyboard
-    @objc func dismissKeyBoard(){
-        self.view.endEditing(true)
-    }
-    
     @IBAction func clickDismiss(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
@@ -144,20 +135,21 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
     */
 
 }
-extension bleDeviceVC: UITableViewDataSource{
+extension bleDeviceVC: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return deviceList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("f1")
         let cell = UITableViewCell()
         cell.textLabel?.text = deviceList[indexPath.row]
-        print("f1")
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("f2")
+        let targetDevice = deviceList[indexPath.row]
         print("Your selected is: \(deviceList[indexPath.row])")
     }
 }

@@ -36,11 +36,9 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBAction func SwitchDeviceList(_ sender: Any) {
         if let controller = storyboard?.instantiateViewController(withIdentifier: "bleDevice"){
             if peripheralMonitor == nil{
-                print("no disconnect")
                 self.present(controller, animated: true, completion: nil)
             }
             else{
-                print("disconnect")
                 centralManager?.cancelPeripheralConnection(peripheralMonitor!)
                 connectTarget = ""
                 self.present(controller, animated: true, completion: nil)

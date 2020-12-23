@@ -3,6 +3,9 @@ import CoreBluetooth
 
 var connectTarget: String = ""
 
+let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
+let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
+
 class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     var deviceList = [String]()
     var centralManager: CBCentralManager?
@@ -54,30 +57,30 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         switch central.state {
         case .unknown:
             print("Bluetooth status is UNKNOWN")
-            bluetoothOffLabel.alpha = 1.0
+            bluetoothOffLabel?.alpha = 1.0
             cleanText()
         case .resetting:
             print("Bluetooth status is RESETTING")
-            bluetoothOffLabel.alpha = 1.0
+            bluetoothOffLabel?.alpha = 1.0
             cleanText()
         case .unsupported:
             print("Bluetooth status is UNSUPPORTED")
-            bluetoothOffLabel.alpha = 1.0
+            bluetoothOffLabel?.alpha = 1.0
             cleanText()
         case .unauthorized:
             print("Bluetooth status is UNAUTHORIZED")
-            bluetoothOffLabel.alpha = 1.0
+            bluetoothOffLabel?.alpha = 1.0
             cleanText()
         case .poweredOff:
             print("Bluetooth status is POWERED OFF")
-            bluetoothOffLabel.alpha = 1.0
+            bluetoothOffLabel?.alpha = 1.0
             cleanText()
         case .poweredOn:
             print("Bluetooth status is POWERED ON")
             //use main thread to update UI
             DispatchQueue.main.async { () -> Void in
-                self.bluetoothOffLabel.alpha = 0.0
-                self.connectingActivityIndicator.startAnimating()
+                self.bluetoothOffLabel?.alpha = 0.0
+                self.connectingActivityIndicator?.startAnimating()
             }
             scanBLEDevice()
         @unknown default:
@@ -112,21 +115,24 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("4")
         DispatchQueue.main.async { () -> Void in
-            self.brandNameTextField.text = peripheral.name!
-            self.beatsPerMinuteLabel.text = "----"
-            self.connectingActivityIndicator.stopAnimating()
+            self.brandNameTextField?.text = peripheral.name!
+            self.beatsPerMinuteLabel?.text = "----"
+            self.connectingActivityIndicator?.stopAnimating()
         }
+        print("4.1")
         peripheralMonitor?.discoverServices([BLE_Temp_Service_CBUUID])
-    }
+        print([BLE_Temp_Service_CBUUID])
+        print("4.2")
+     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("5")
         print("Disconnected!")
         
         DispatchQueue.main.async { () -> Void in
-            self.brandNameTextField.text = "----"
-            self.beatsPerMinuteLabel.text = "----"
-            self.connectingActivityIndicator.startAnimating()
+            self.brandNameTextField?.text = "----"
+            self.beatsPerMinuteLabel?.text = "----"
+            self.connectingActivityIndicator?.startAnimating()
         }
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID])
     }

@@ -11,9 +11,6 @@ protocol FetchTargetDelegate {
     func fetchText(_ text: String)
 }
 
-let BLE_Temp_Service_CBUUID = CBUUID(string: "0x1809")
-let BLE_Temp_Measurement_Characteristic_CBUUID = CBUUID(string: "0x2A1C")
-
 class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBOutlet weak var deviceTable: UITableView!
     var centralManager: CBCentralManager?
@@ -107,8 +104,7 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
     }
     
     @IBAction func clickDismiss(_ sender: Any) {
-        stopScanBLEDevice()
-        self.present(HomePage, animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     /*
     // MARK: - Navigation
@@ -136,7 +132,7 @@ extension bleDeviceVC: UITableViewDataSource, UITableViewDelegate{
         stopScanBLEDevice()
         let targetDevice = deviceList[indexPath.row]
         print("Your selected is: \(deviceList[indexPath.row])")
-        self.present(HomePage, animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         self.delegate = HomePage
         self.delegate?.fetchText(targetDevice)
     }

@@ -157,6 +157,7 @@
                             <constraint firstItem="hW4-PX-k8z" firstAttribute="bottom" secondItem="MFK-4o-jX9" secondAttribute="bottom" id="rQb-Jd-G2c"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="fQE-MU-WDL"/>
                     <connections>
                         <outlet property="deviceTable" destination="hW4-PX-k8z" id="96D-c2-7q6"/>
                     </connections>

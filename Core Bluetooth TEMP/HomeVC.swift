@@ -20,12 +20,12 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("1:")
-        connectingActivityIndicator.backgroundColor = UIColor.white
-        connectingActivityIndicator.startAnimating()
-        bluetoothOffLabel.alpha = 0.0
-        //chooseDeviceBtn.alpha = 0.0
-        VANATEKLogo.alpha = 0.3
-        //setCentral_delegate()
+        connectingActivityIndicator?.backgroundColor = UIColor.white
+        connectingActivityIndicator?.startAnimating()
+        bluetoothOffLabel?.alpha = 0.0
+        //chooseDeviceBtn?.alpha = 0.0
+        VANATEKLogo?.alpha = 0.3
+        setCentral_delegate()
         cleanText()
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
@@ -241,9 +241,8 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func scanBLEDevice(){
-        print("start")
+        print("start scan")
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
-        print("end")
     }
     
     func stopScanBLEDevice(){
@@ -258,8 +257,8 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //init all text
     func cleanText(){
-        brandNameTextField.text = "----"
-        beatsPerMinuteLabel.text = "----"
+        brandNameTextField?.text = "----"
+        beatsPerMinuteLabel?.text = "----"
     }
 }
 
@@ -279,7 +278,6 @@ extension HomeVC: FetchTargetDelegate{
     func fetchText(_ text: String){
         print("11:")
         print(text)
-        setCentral_delegate()
         connectTarget = text
     }
 }

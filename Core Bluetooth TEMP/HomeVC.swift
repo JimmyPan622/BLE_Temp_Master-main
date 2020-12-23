@@ -80,7 +80,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         //test line----------------------------------------
-        print("4")
+        print("3")
         peripheral.delegate = self
         print(peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
@@ -102,6 +102,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("5")
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
             self.beatsPerMinuteLabel.text = "----"
@@ -111,7 +112,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("7")
+        print("6")
         print("Disconnected!")
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = "----"
@@ -122,7 +123,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print("5:")
+        print("7")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -145,7 +146,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("6")
+        print("8")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -167,6 +168,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("9")
         if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
             let tempValue = String(format: "%.2f", deriveBeatsPerMinute(using: characteristic))
             DispatchQueue.main.async { () -> Void in
@@ -180,6 +182,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func deriveBeatsPerMinute(using TempCharacteristic: CBCharacteristic) ->  Float{
+        print("10")
         let TempValue = TempCharacteristic.value!
         /*print("TempValue.type: \(type(of: TempValue))")
         print("TempValue.value: \(TempValue)")*/
@@ -204,6 +207,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func decodePeripheralState(peripheralState: CBPeripheralState) {
+        print("11")
         switch peripheralState {
             case .disconnected:
                 print("Peripheral state: disconnected")
@@ -219,7 +223,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func scanBLEDevice(){
-        print("3")
+        print("12")
         centralManager?.scanForPeripherals(withServices: [BLE_Temp_Service_CBUUID], options: nil)
     }
     

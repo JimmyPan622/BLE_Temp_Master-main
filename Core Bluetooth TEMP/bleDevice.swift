@@ -126,14 +126,12 @@ extension bleDeviceVC: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("f1")
         let cell = UITableViewCell()
         cell.textLabel?.text = deviceList[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("f2")
         let targetDevice = deviceList[indexPath.row]
         print("Your selected is: \(deviceList[indexPath.row])")
         self.dismiss(animated: true, completion: nil)

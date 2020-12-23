@@ -13,12 +13,11 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBOutlet weak var brandNameTextField: UITextField!
     @IBOutlet weak var beatsPerMinuteLabel: UILabel!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
-
     @IBOutlet weak var VANATEKLogo: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("1: ")
+        print("1")
         connectingActivityIndicator.backgroundColor = UIColor.white
         connectingActivityIndicator.startAnimating()
         bluetoothOffLabel.alpha = 0.0

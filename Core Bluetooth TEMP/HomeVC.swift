@@ -34,9 +34,20 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     @IBAction func SwitchDeviceList(_ sender: Any) {
-        /*self.present(ListPage, animated: true, completion: nil)
-        self.delegate = ListPage
-        self.delegate?.fetchText("123321")*/
+        if let controller = storyboard?.instantiateViewController(withIdentifier: "bleDevice"){
+            if peripheralMonitor == nil{
+                print("no disconnect")
+                self.present(controller, animated: true, completion: nil)
+            }
+            else{
+                print("disconnect")
+                centralManager?.cancelPeripheralConnection(peripheralMonitor!)
+                connectTarget = ""
+                self.present(controller, animated: true, completion: nil)
+            }
+           
+        }
+        
     }
     
     //Get bluetooth status
@@ -89,7 +100,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
 
-        if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
+        if(peripheral.name == connectTarget){
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
             stopScanBLEDevice()
@@ -100,7 +111,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
-    func centralManager(_ central: CBCentralManager, ƒ peripheral: CBPeripheral) {
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("4")
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
@@ -140,7 +151,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             if service.uuid == BLE_Temp_Service_CBUUID {
                 print("Serv Name: \(service)")
                 
-                //peripheral.discoverCharacteristics(nil, for: service)
+                peripheral.discoverCharacteristics(nil, for: service)
             }
         }
     }
@@ -221,7 +232,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             print("Error")
         }
     }
-    
     func setCentral_delegate(){
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
     }

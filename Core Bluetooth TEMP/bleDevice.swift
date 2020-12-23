@@ -107,7 +107,8 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
     }
     
     @IBAction func clickDismiss(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        stopScanBLEDevice()
+        self.present(HomePage, animated: true, completion: nil)
     }
     /*
     // MARK: - Navigation
@@ -132,9 +133,10 @@ extension bleDeviceVC: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        stopScanBLEDevice()
         let targetDevice = deviceList[indexPath.row]
         print("Your selected is: \(deviceList[indexPath.row])")
-        self.dismiss(animated: true, completion: nil)
+        self.present(HomePage, animated: true, completion: nil)
         self.delegate = HomePage
         self.delegate?.fetchText(targetDevice)
     }

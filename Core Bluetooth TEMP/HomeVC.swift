@@ -22,7 +22,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         bluetoothOffLabel.alpha = 0.0
         //chooseDeviceBtn.alpha = 0.0
         VANATEKLogo.alpha = 0.3
-        centralManager = CBCentralManager.init(delegate: self, queue: nil)
+        //setCentral_delegate()
         cleanText()
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
@@ -70,6 +70,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
                 self.bluetoothOffLabel.alpha = 0.0
                 self.connectingActivityIndicator.startAnimating()
             }
+            scanBLEDevice()
         @unknown default:
             print("Error")
         }
@@ -77,10 +78,10 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-
-        print("4")
+        
+        print("3")
         peripheral.delegate = self
-        print("M: "+peripheral.name!)
+        print(peripheral.name!)
         print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
         //self.bluetoothList.reloadData()
         decodePeripheralState(peripheralState: peripheral.state)
@@ -88,7 +89,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         peripheralMonitor = peripheral
         peripheralMonitor?.delegate = self
 
-        if(peripheral.name == connectTarget){
+        if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
             centralManager?.connect(peripheralMonitor!)
             print("connect: \(String(describing: peripheralMonitor))")
             stopScanBLEDevice()
@@ -100,7 +101,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, ƒ peripheral: CBPeripheral) {
-        print("5")
+        print("4")
         DispatchQueue.main.async { () -> Void in
             self.brandNameTextField.text = peripheral.name!
             self.beatsPerMinuteLabel.text = "----"
@@ -110,7 +111,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("6")
+        print("5")
         print("Disconnected!")
         
         DispatchQueue.main.async { () -> Void in
@@ -122,7 +123,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print("7")
+        print("6")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -145,7 +146,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("8")
+        print("7")
         if((error != nil)){
             print("Error: \(error!.localizedDescription)")
             return
@@ -167,7 +168,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("9")
+        print("8")
         if characteristic.uuid == BLE_Temp_Measurement_Characteristic_CBUUID {
             let tempValue = String(format: "%.2f", deriveBeatsPerMinute(using: characteristic))
             DispatchQueue.main.async { () -> Void in
@@ -181,7 +182,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func deriveBeatsPerMinute(using TempCharacteristic: CBCharacteristic) ->  Float{
-        print("10")
+        print("9")
         let TempValue = TempCharacteristic.value!
         /*print("TempValue.type: \(type(of: TempValue))")
         print("TempValue.value: \(TempValue)")*/
@@ -206,7 +207,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func decodePeripheralState(peripheralState: CBPeripheralState) {
-        print("11")
+        print("10")
         switch peripheralState {
             case .disconnected:
                 print("Peripheral state: disconnected")
@@ -219,6 +220,10 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         @unknown default:
             print("Error")
         }
+    }
+    
+    func setCentral_delegate(){
+        centralManager = CBCentralManager.init(delegate: self, queue: nil)
     }
     
     func scanBLEDevice(){
@@ -258,9 +263,9 @@ extension Array where Element: Hashable {
 
 extension HomeVC: FetchTargetDelegate{
     func fetchText(_ text: String){
-        print("3:")
+        print("11:")
         print(text)
+        setCentral_delegate()
         connectTarget = text
-        scanBLEDevice()
     }
 }

@@ -11,7 +11,7 @@ protocol FetchTargetDelegate {
     func fetchText(_ text: String)
 }
 
-class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+class BleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     @IBOutlet weak var deviceTable: UITableView!
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
@@ -115,9 +115,9 @@ class bleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
         // Pass the selected object to the new view controller.
     }
     */
-
 }
-extension bleDeviceVC: UITableViewDataSource, UITableViewDelegate{
+
+extension BleDeviceVC: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return deviceList.count
     }

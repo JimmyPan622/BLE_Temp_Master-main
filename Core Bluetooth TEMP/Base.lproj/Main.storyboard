@@ -120,7 +120,7 @@
         <!--Ble DeviceVC-->
         <scene sceneID="yWg-r1-QYM">
             <objects>
-                <viewController storyboardIdentifier="bleDevice" id="ks1-q8-WCX" customClass="bleDeviceVC" customModule="BLE_Temp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BleDevicePage" id="ks1-q8-WCX" customClass="BleDeviceVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zQ6-qE-PkN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

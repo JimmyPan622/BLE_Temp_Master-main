@@ -29,7 +29,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         cleanText()
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
-                self.view.addGestureRecognizer(tap)
+        self.view.addGestureRecognizer(tap)
     }
     
     override func didReceiveMemoryWarning() {
@@ -37,7 +37,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     @IBAction func SwitchDeviceList(_ sender: Any) {
-        if let controller = storyboard?.instantiateViewController(withIdentifier: "bleDevice"){
+        if let controller = storyboard?.instantiateViewController(withIdentifier: "BleDevicePage"){
             if peripheralMonitor == nil{
                 self.present(controller, animated: true, completion: nil)
             }
@@ -46,9 +46,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
                 connectTarget = ""
                 self.present(controller, animated: true, completion: nil)
             }
-           
         }
-        
     }
     
     //Get bluetooth status
@@ -236,6 +234,7 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             print("Error")
         }
     }
+    
     func setCentral_delegate(){
         centralManager = CBCentralManager.init(delegate: self, queue: nil)
     }
@@ -269,6 +268,7 @@ extension Array where Element: Hashable {
         addedDict.updateValue(true, forKey: $0) == nil
       }
    }
+    
    mutating func removeDuplicates() {
       self = self.removingDuplicates()
    }

@@ -23,7 +23,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
         connectingActivityIndicator?.backgroundColor = UIColor.white
         connectingActivityIndicator?.startAnimating()
         bluetoothOffLabel?.alpha = 0.0
-        //chooseDeviceBtn?.alpha = 0.0
         VANATEKLogo?.alpha = 0.3
         setCentral_delegate()
         cleanText()
@@ -88,7 +87,10 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //Scan compliant service and connect it
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
+        guard let deviceName = peripheral.name else {
+            return
+        }
+        print(deviceName)
         print("3")
         peripheral.delegate = self
         print(peripheral.name!)

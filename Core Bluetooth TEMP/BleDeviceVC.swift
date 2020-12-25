@@ -16,6 +16,7 @@ class BleDeviceVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDeleg
     var centralManager: CBCentralManager?
     var peripheralMonitor: CBPeripheral?
     var delegate: FetchTargetDelegate?
+    
     var HomePage = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomePage") as! HomeVC
     var deviceList: [String] = []
     

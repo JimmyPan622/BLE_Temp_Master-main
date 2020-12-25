@@ -90,24 +90,6 @@ class HomeVC: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
             deviceList.append(String(peripheral.name!))
         }
         print(deviceList)
-        //print("Characteristic ID: ", BLE_Temp_Measurement_Characteristic_CBUUID)
-        //self.bluetoothList.reloadData()
-        //decodePeripheralState(peripheralState: peripheral.state)
-        //暫時不使用-----------------------------------------------------------
-        /*peripheralMonitor = peripheral
-        peripheralMonitor?.delegate = self
-        print("Device List: \(String(describing: peripheralMonitor))")
-        if(peripheral.name == "AMICCOM_Demo" || peripheral.name == "VANATEK DEMO"){
-            //設為代表後才能抓取資料
-            peripheral.delegate = self
-            centralManager?.connect(peripheralMonitor!)
-            print("connect: \(String(describing: peripheralMonitor))")
-            stopScanBLEDevice()
-        }
-        else{
-            centralManager?.cancelPeripheralConnection(peripheral)
-            scanBLEDevice()
-        }*/
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
